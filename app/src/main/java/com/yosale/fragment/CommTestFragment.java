@@ -45,6 +45,13 @@ public class CommTestFragment extends Fragment {
                 postTest();
             }
         });
+        baseView.findViewById(R.id.btn_content_post).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                postContentTest();
+            }
+        });
+
 
 
         return baseView;
@@ -75,8 +82,6 @@ public class CommTestFragment extends Fragment {
         ;
     }
 
-
-
     private void postTest(){
         String filePath = android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator+"park_2.jpg";
         LogUtil.e("1111 filePath: " + filePath);
@@ -85,8 +90,7 @@ public class CommTestFragment extends Fragment {
                 .post(ConstantURL.getUrl("api/Account/updateAccountInfo"))
                 .addStringPart("u_index", "4")
                 .addStringPart("email", "messi@gmail.com")
-                .addStringPart("nickname", "park_2")
-                .addStringPart("picture", "park_2.jpg")
+                .addStringPart("nickname", "messi")
                 .addStringPart("alarm", "1")
                 .addStringPart("seller", "0")
                 .addFilePart("files[]", new File(filePath))
@@ -105,4 +109,70 @@ public class CommTestFragment extends Fragment {
                 })
                 .execute();
     }
+
+    private void postContentTest(){
+        String filePath1 = android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator+"park_5.jpg";
+        String filePath2 = android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator+"park_6.png";
+        String filePath3 = android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator+"park_7.jpg";
+
+        LogUtil.e("1111 File Path : " + filePath1);
+        File file = new File(filePath1);
+        if(file.exists()){
+            LogUtil.e("1111 File EXIST");
+        }else{
+            LogUtil.e("1111 File Not EXIST");
+        }
+
+//        'u_index' => $u_index,
+//                's_index' => $s_index,
+//                'title' => $title,
+//                'content' => $content,
+//                'sdate' => $sdate,
+//                'edate' => $edate,
+//                'sale_type' => $sale_type,
+//                'sale_rate' => $sale_rate,
+//                'show_content_info' => $show_content_info,
+//                'store_name' => $store_name,
+//                'local_lon' => $local_lon,
+//                'local_lat' => $local_lat,
+
+        Volleyer.volleyer()
+                .post(ConstantURL.getUrl("api/Contents/postContent"))
+                .addStringPart("u_index", "1")
+                .addStringPart("s_index", "1")
+                .addStringPart("title", "등록 테스트 입니다. ")
+                .addStringPart("content", "등록 테스트!! ")
+                .addStringPart("sdate", "2016-03-28 00:00:00")
+                .addStringPart("edate", "2016-03-31 23:59:59")
+                .addStringPart("sale_type", "1")
+                .addStringPart("sale_rate", "30")
+                .addStringPart("show_content_info", "1")
+                .addStringPart("store_name", "0")
+                .addStringPart("local_lon", "1")
+                .addStringPart("local_lat", "0")
+                .addFilePart("files[]", new File(filePath1))
+                .addFilePart("files[]", new File(filePath2))
+                .addFilePart("files[]", new File(filePath3))
+
+                .withListener(new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        tv_result.setText("Post Response : " + response);
+                    }
+                })
+                .withErrorListener(new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        if (error.networkResponse != null && error.networkResponse.data != null) {
+                            LogUtil.e("1111  :  " + new String(error.networkResponse.data));
+                            tv_result.setText(new String(error.networkResponse.data));
+                        } else {
+                            tv_result.setText(new String(error.toString()));
+                        }
+
+                    }
+                })
+                .execute();
+    }
+
 }
