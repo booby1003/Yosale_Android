@@ -8,7 +8,6 @@ public class ConstantURL {
     public static final String URL = "http://evilstorm.godohosting.com/yosale/";
 
     public static String getUrl(String url){
-
         return URL + url;
     }
 
