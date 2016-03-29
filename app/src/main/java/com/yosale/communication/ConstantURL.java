@@ -9,7 +9,6 @@ public class ConstantURL {
 
     public static String getUrl(String url){
 
-
         return URL + url;
     }
 
